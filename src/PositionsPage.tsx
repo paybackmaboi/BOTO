@@ -4,11 +4,10 @@ import {
   Button,
   Table,
   Modal,
-  Form,
-  Row,
-  Col
+  Form
 } from 'react-bootstrap';
 import { v4 as uuidv4 } from 'uuid';
+import './App.css'; 
 
 interface Position {
   id: string;
@@ -32,21 +31,9 @@ const PositionManager: React.FC = () => {
       setPositions(JSON.parse(stored));
     } else {
       const initialPositions: Position[] = [
-        'President',
-        'Vice',
-        'Secretary',
-        'Auditor',
-        'Treasurer',
-        'PIO in',
-        'PIO ex',
-        'Senator 1',
-        'Senator 2',
-        'Senator 3',
-        'Senator 4',
-        'Senator 5',
-        'Senator 6',
-        'Senator 7',
-        'Senator 8'
+        'President', 'Vice', 'Secretary', 'Auditor', 'Treasurer',
+        'PIO in', 'PIO ex', 'Senator 1', 'Senator 2', 'Senator 3',
+        'Senator 4', 'Senator 5', 'Senator 6', 'Senator 7', 'Senator 8'
       ].map(title => ({ id: uuidv4(), name: title, voteLimit: 1 }));
       localStorage.setItem(STORAGE_KEY, JSON.stringify(initialPositions));
       setPositions(initialPositions);
@@ -119,20 +106,23 @@ const PositionManager: React.FC = () => {
   };
 
   return (
-    <Container className="py-4">
-      <h2 className="text-primary fw-bold">Positions</h2>
-      <p className="text-muted">Manage positions and set vote limits per position.</p>
+    <Container fluid className="p-4 bg-light min-vh-100">
+      <h2 className="text-dark fw-bold">Position List</h2>
+      <p className="text">Manage positions and set vote limits per position.</p>
 
-      <Button variant="primary" className="mb-3" onClick={() => setShowModal(true)}>
-        Add Position
+      <Button className="btn-custom-blue mb-3" onClick={() => {
+        resetForm();
+        setShowModal(true);
+      }}>
+        Add New
       </Button>
 
-      <Table striped bordered hover className="rounded">
-        <thead className="table-primary">
+      <Table bordered hover responsive className="bg-white rounded">
+        <thead className="table-header-custom">
           <tr>
             <th>Position</th>
             <th>Vote Limit</th>
-            <th style={{ width: '110px' }}>Actions</th>
+            <th style={{ width: '130px' }}>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -143,14 +133,15 @@ const PositionManager: React.FC = () => {
                 <td>{pos.voteLimit}</td>
                 <td>
                   <Button
-                    variant="outline-primary"
+                    variant="warning"
                     size="sm"
                     onClick={() => handleEdit(pos.id)}
+                    className="me-2"
                   >
                     Edit
-                  </Button>{' '}
+                  </Button>
                   <Button
-                    variant="outline-danger"
+                    variant="danger"
                     size="sm"
                     onClick={() => handleDelete(pos.id)}
                   >
@@ -196,7 +187,7 @@ const PositionManager: React.FC = () => {
               <Form.Control.Feedback type="invalid">{errors.voteLimit}</Form.Control.Feedback>
             </Form.Group>
 
-            <Button type="submit" className="w-100" variant="primary">
+            <Button type="submit" className="btn-custom-blue w-100">
               Save
             </Button>
           </Form>

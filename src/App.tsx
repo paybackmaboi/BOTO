@@ -43,10 +43,13 @@ const App: React.FC = () => {
         onClick={() => setSidebarOpen(s => !s)}
         style={{ left: sidebarOpen ? 'calc(var(--sidebar-width) + 16px)' : 16 }}
       >
+        {/* Simple hamburger icon */}
+        <span style={{ fontSize: 28, fontWeight: 'bold' }}>&#9776;</span>
       </button>
 
       {/* Sidebar */}
       <nav id="sidebar" className={sidebarOpen ? 'show' : ''}>
+        
         <div>
           {menu.map(item => (
             <a
@@ -55,7 +58,6 @@ const App: React.FC = () => {
               href="#"
               onClick={e => { e.preventDefault(); setCurrentPage(item.label); setSidebarOpen(false); }}
             >
-            
               {item.label}
             </a>
           ))}

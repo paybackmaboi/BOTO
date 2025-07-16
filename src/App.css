@@ -147,7 +147,17 @@ body {
     margin-left: 0;
   }
 }
-.centered-card {
-  max-width: 400px;
-  width: 100%;
+.btn-custom-blue {
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+}
+
+.btn-custom-blue:hover {
+  background-color: #357ab8;
+}
+
+.table-header-custom {
+  background-color: #e7f1fd;
+  font-weight: bold;
 }

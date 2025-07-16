@@ -7,6 +7,7 @@ import {
   Button,
   Table,
   Badge,
+  Image, // Import Image component for displaying photos
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -15,6 +16,7 @@ interface Voter {
   name: string;
   schoolId: string;
   registeredAt: string;
+  photo?: string; // Add optional photo field (Base64 string)
 }
 
 interface Candidate {
@@ -42,6 +44,7 @@ const VoterManagement: React.FC = () => {
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [name, setName] = useState('');
   const [schoolId, setSchoolId] = useState('');
+  const [photo, setPhoto] = useState<string | null>(null); // State to store Base64 photo
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
@@ -54,23 +57,44 @@ const VoterManagement: React.FC = () => {
     setCandidates(storedCandidates);
   }, []);
 
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPhoto(reader.result as string); // Store Base64 string
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setPhoto(null);
+    }
+  };
+
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !schoolId) return alert('All fields are required.');
+    if (!name || !schoolId) return alert('Name and School ID are required.');
     if (voters.some(v => v.schoolId === schoolId)) {
       return alert('Voter with this School ID already exists.');
     }
+
     const newVoter: Voter = {
       id: 'voter-' + Date.now(),
       name,
       schoolId,
       registeredAt: new Date().toISOString(),
+      photo: photo || undefined, // Add photo if available
     };
     const updatedVoters = [...voters, newVoter];
     setVoters(updatedVoters);
     localStorage.setItem(STORAGE_VOTERS, JSON.stringify(updatedVoters));
     setName('');
     setSchoolId('');
+    setPhoto(null); // Clear photo input after registration
+    // Clear the file input visually
+    const photoInput = document.getElementById('voterPhoto') as HTMLInputElement;
+    if (photoInput) {
+      photoInput.value = '';
+    }
   };
 
   const handleDelete = (voterId: string) => {
@@ -113,7 +137,7 @@ const VoterManagement: React.FC = () => {
       <Form className="bg-white p-4 rounded shadow-sm mb-4" onSubmit={handleRegister}>
         <h4>Register New Voter</h4>
         <Row>
-          <Col md={5}>
+          <Col md={4}>
             <Form.Group className="mb-3">
               <Form.Label>Full Name</Form.Label>
               <Form.Control
@@ -124,7 +148,7 @@ const VoterManagement: React.FC = () => {
               />
             </Form.Group>
           </Col>
-          <Col md={5}>
+          <Col md={4}>
             <Form.Group className="mb-3">
               <Form.Label>School ID</Form.Label>
               <Form.Control
@@ -135,9 +159,22 @@ const VoterManagement: React.FC = () => {
               />
             </Form.Group>
           </Col>
-          <Col md={2} className="d-flex align-items-end">
+          <Col md={4}>
+            <Form.Group className="mb-3">
+              <Form.Label>Voter Photo (Optional)</Form.Label>
+              <Form.Control
+                id="voterPhoto" // Add an ID to easily clear the input
+                type="file"
+                accept="image/*" // Accept only image files
+                onChange={handlePhotoChange}
+              />
+            </Form.Group>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
             <Button variant="primary" type="submit" className="w-100">
-              Register
+              Register Voter
             </Button>
           </Col>
         </Row>
@@ -146,7 +183,7 @@ const VoterManagement: React.FC = () => {
       <Form.Group className="mb-3">
         <Form.Control
           type="text"
-          placeholder="Search voters..."
+          placeholder="Search voters by name or school ID..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
@@ -155,6 +192,7 @@ const VoterManagement: React.FC = () => {
       <Table bordered hover responsive className="bg-white rounded shadow-sm">
         <thead className="table-light">
           <tr>
+            <th>Photo</th> {/* New column for photo */}
             <th>Name</th>
             <th>School ID</th>
             <th>Status</th>
@@ -168,6 +206,18 @@ const VoterManagement: React.FC = () => {
             const hasVoted = votes.some(v => v.voterId === voter.id);
             return (
               <tr key={voter.id}>
+                <td>
+                  {voter.photo ? (
+                    <Image
+                      src={voter.photo}
+                      alt={`${voter.name}'s photo`}
+                      style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '5px' }}
+                      thumbnail
+                    />
+                  ) : (
+                    'N/A'
+                  )}
+                </td>
                 <td>{voter.name}</td>
                 <td>{voter.schoolId}</td>
                 <td>
