@@ -20,65 +20,27 @@ body {
   line-height: 1.6;
 }
 
-.App {
-  display: flex;
+.table-dark {
+    --bs-table-bg: #212529;
+    --bs-table-striped-bg: #2c3034;
+    --bs-table-striped-color: #fff;
+    --bs-table-active-bg: #373b3e;
+    --bs-table-active-color: #fff;
+    --bs-table-hover-bg: #323539;
+    --bs-table-hover-color: #fff;
+    color: #fff;
+    border-color: #373b3e;
 }
-
-main {
-  flex-grow: 1;
-  padding: 2rem;
-  padding-top: calc(var(--header-height) + 2rem);
-  transition: margin-left 0.3s ease-in-out;
-  margin-left: 0;
-}
-
-main.content-shifted {
-  margin-left: var(--sidebar-width);
-}
-
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 1010;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
-}
-
-.overlay.show {
-  opacity: 1;
-  visibility: visible;
-}
-
-.card {
-  border: none;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s;
-}
-
-.card:hover {
-  transform: translateY(-5px);
-}
-
-.btn-primary {
-  background-color: var(--primary-color);
-  border-color: var(--primary-color);
-}
-
-.btn-primary:hover {
-  background-color: #0056b3;
-  border-color: #0056b3;
-}
-
-.table {
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.thead-dark th {
-    background-color: var(--dark-color);
-    color: var(--light-color);
+.table-info {
+    --bs-table-color: #000;
+    --bs-table-bg: #cff4fc;
+    --bs-table-border-color: #b6effb;
+    --bs-table-striped-bg: #c5e9f2;
+    --bs-table-striped-color: #000;
+    --bs-table-active-bg: #badce3;
+    --bs-table-active-color: #000;
+    --bs-table-hover-bg: #bfd5da;
+    --bs-table-hover-color: #000;
+    color: var(--bs-table-color);
+    border-color: var(--bs-table-border-color);
 }

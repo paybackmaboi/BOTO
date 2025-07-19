@@ -1,53 +1,55 @@
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import HomePage from './HomePage';
-import CandidatesPage from './CandidatePage';
-import VotersPage from './VotersPage';
-import PositionsPage from './PositionsPage';
-import VotePage from './VotePage';
-import ResultPage from './ResultPage';
-import Sidebar from './Sidebar';
-import Header from './Header';
+import { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import HomePage from './pages/HomePage';
+import AdminDashboard from './Admin/AdminDashboard';
+import UserDashboard from './User/UserDashboard';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
+import './App.css';
 
-const App: React.FC = () => {
-  const [isSidebarOpen, setSidebarOpen] = useState(false);
+function App() {
+  const [isAdminLoggedIn, setAdminLoggedIn] = useState(() => !!localStorage.getItem('isAdminLoggedIn'));
+  const [isUserLoggedIn, setUserLoggedIn] = useState(() => !!localStorage.getItem('isUserLoggedIn'));
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!isSidebarOpen);
-  };
-
-  const closeSidebar = () => {
-    if (isSidebarOpen) {
-      setSidebarOpen(false);
+  const handleAdminLogin = (status: boolean) => {
+    setAdminLoggedIn(status);
+    if (status) {
+      localStorage.setItem('isAdminLoggedIn', 'true');
+    } else {
+      localStorage.removeItem('isAdminLoggedIn');
     }
   };
 
+  const handleUserLogin = (status: boolean) => {
+    setUserLoggedIn(status);
+    if (status) {
+      localStorage.setItem('isUserLoggedIn', 'true');
+    } else {
+      localStorage.removeItem('isUserLoggedIn');
+      localStorage.removeItem('current-voter-session');
+    }
+  };
+
+
   return (
     <Router>
-      <div className="App">
-        <div
-          className={`overlay ${isSidebarOpen ? 'show' : ''}`}
-          onClick={closeSidebar}
-        ></div>
+      <Routes>
+        <Route path="/" element={<HomePage setAdminLoggedIn={handleAdminLogin} setUserLoggedIn={handleUserLogin} />} />
 
-        <Header toggleSidebar={toggleSidebar} />
-        <Sidebar isOpen={isSidebarOpen} closeSidebar={closeSidebar} />
+        {/* Admin Routes */}
+        <Route
+          path="/admin/*"
+          element={isAdminLoggedIn ? <AdminDashboard setAdminLoggedIn={handleAdminLogin}/> : <Navigate to="/" replace />}
+        />
 
-        <main className={isSidebarOpen ? 'content-shifted' : ''}>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/positions" element={<PositionsPage />} />
-            <Route path="/candidates" element={<CandidatesPage />} />
-            <Route path="/voters" element={<VotersPage />} />
-            <Route path="/vote" element={<VotePage />} />
-            <Route path="/results" element={<ResultPage />} />
-          </Routes>
-        </main>
-      </div>
+        {/* User Routes */}
+        <Route
+          path="/user/*"
+          element={isUserLoggedIn ? <UserDashboard setUserLoggedIn={handleUserLogin} /> : <Navigate to="/" replace />}
+        />
+      </Routes>
     </Router>
   );
-};
+}
 
 export default App;
