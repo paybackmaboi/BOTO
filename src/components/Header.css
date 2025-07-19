@@ -1,0 +1,21 @@
+.header {
+    background-color: #343a40;
+    padding: 10px 20px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.header-title {
+    margin: 0;
+    font-size: 1.5rem;
+    flex-grow: 1;
+    text-align: center;
+}

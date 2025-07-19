@@ -1,47 +1,29 @@
-import { useState } from 'react';
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
-import Header from '../components/Header';
-import AdminSidebar from '../components/AdminSidebar';
-import PositionsPage from './pages/PositionsPage';
-import CandidatesPage from './pages/CandidatesPage';
-import VotersPage from './pages/VotersPage';
-import '../App.css';
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import MainLayout from '../components/MainLayout';
+import Dashboard from './pages/Dashboard';
+import Election from './pages/Election';
+import Candidates from './pages/Candidates';
+import Voters from './pages/Voters';
 
-interface AdminDashboardProps {
-    setAdminLoggedIn: (isLoggedIn: boolean) => void;
-}
+const AdminDashboard = ({ setAdminLoggedIn }) => {
+    const adminLinks = [
+        { path: '/admin/dashboard', name: 'Dashboard' },
+        { path: '/admin/election', name: 'Election' },
+        { path: '/admin/candidates', name: 'Candidates' },
+        { path: '/admin/voters', name: 'Voters' },
+    ];
 
-const AdminDashboard: React.FC<AdminDashboardProps> = ({ setAdminLoggedIn }) => {
-  const [isSidebarOpen, setSidebarOpen] = useState(false);
-  const navigate = useNavigate();
-
-  const toggleSidebar = () => {
-    setSidebarOpen(!isSidebarOpen);
-  };
-
-  const handleLogout = () => {
-    setAdminLoggedIn(false);
-    navigate('/', { replace: true });
-  };
-
-
-  return (
-    <div className="App">
-       <div className={`overlay ${isSidebarOpen ? 'show' : ''}`} onClick={toggleSidebar}></div>
-       <AdminSidebar />
-       <div className="main-content">
-          <Header toggleSidebar={toggleSidebar} handleLogout={handleLogout} showLogout={true} />
-          <main className="container-fluid p-4">
-             <Routes>
-                <Route path="positions" element={<PositionsPage />} />
-                <Route path="candidates" element={<CandidatesPage />} />
-                <Route path="voters" element={<VotersPage />} />
-                <Route path="*" element={<Navigate to="positions" replace />} />
-             </Routes>
-          </main>
-       </div>
-    </div>
-  );
+    return (
+        <MainLayout links={adminLinks} handleLogout={() => setAdminLoggedIn(false)} title="Admin Dashboard">
+            <Routes>
+                <Route path="dashboard" element={<Dashboard />} />
+                <Route path="election" element={<Election />} />
+                <Route path="candidates" element={<Candidates />} />
+                <Route path="voters" element={<Voters />} />
+            </Routes>
+        </MainLayout>
+    );
 };
 
 export default AdminDashboard;

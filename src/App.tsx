@@ -1,8 +1,12 @@
 import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+
+// Core Pages & Components
 import HomePage from './pages/HomePage';
 import AdminDashboard from './Admin/AdminDashboard';
-import UserDashboard from './User/UserDashboard';
+import UserDashboard from './User/UserDashboard'; // <-- VERIFY THIS LINE
+
+// Styles
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 import './App.css';
