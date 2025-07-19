@@ -7,7 +7,7 @@ import {
   Form
 } from 'react-bootstrap';
 import { v4 as uuidv4 } from 'uuid';
-import './App.css'; 
+
 
 interface Position {
   id: string;
@@ -108,9 +108,9 @@ const PositionManager: React.FC = () => {
   return (
     <Container fluid className="p-4 bg-light min-vh-100">
       <h2 className="text-dark fw-bold">Position List</h2>
-      <p className="text">Manage positions and set vote limits per position.</p>
+      <p>Manage positions and set vote limits per position.</p>
 
-      <Button className="btn-custom-blue mb-3" onClick={() => {
+      <Button className="mb-3" variant="primary" onClick={() => {
         resetForm();
         setShowModal(true);
       }}>
@@ -118,7 +118,7 @@ const PositionManager: React.FC = () => {
       </Button>
 
       <Table bordered hover responsive className="bg-white rounded">
-        <thead className="table-header-custom">
+        <thead className="thead-dark">
           <tr>
             <th>Position</th>
             <th>Vote Limit</th>
@@ -187,7 +187,7 @@ const PositionManager: React.FC = () => {
               <Form.Control.Feedback type="invalid">{errors.voteLimit}</Form.Control.Feedback>
             </Form.Group>
 
-            <Button type="submit" className="btn-custom-blue w-100">
+            <Button type="submit" variant="primary" className="w-100">
               Save
             </Button>
           </Form>

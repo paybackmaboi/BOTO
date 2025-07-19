@@ -17,17 +17,18 @@ export default function DashboardPage() {
   useEffect(() => {
     const pos = JSON.parse(localStorage.getItem(STORAGE_POSITIONS) || '[]');
     const cands = JSON.parse(localStorage.getItem(STORAGE_CANDIDATES) || '[]');
-    const votr = new Set(JSON.parse(localStorage.getItem(STORAGE_VOTERS) || '[]'));
+    const voters= new Set(JSON.parse(localStorage.getItem(STORAGE_VOTERS) || '[]'));
     const vts = JSON.parse(localStorage.getItem(STORAGE_VOTES) || '[]');
 
     setPositions(pos);
     setCandidates(cands);
-    setVoters(votr);
+    setVoters(voters);
     setVotes(vts);
     setVotersVoted(new Set(vts.map((v: any) => v.voterId)));
   }, []);
 
   useEffect(() => {
+    const charts: Chart[] = [];
     positions.forEach((pos, idx) => {
       const canvasId = `chart-${idx}`;
       const canvas = document.getElementById(canvasId) as HTMLCanvasElement;
@@ -80,11 +81,12 @@ export default function DashboardPage() {
           },
         },
       });
-
-      return () => {
-        chart.destroy();
-      };
+      charts.push(chart);
     });
+
+    return () => {
+      charts.forEach(chart => chart.destroy());
+    };
   }, [positions, candidates, votes]);
 
   return (

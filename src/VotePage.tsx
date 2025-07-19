@@ -177,23 +177,27 @@ export default function Votes() {
 
   if (!voter) {
     return (
-      <Container className="d-flex justify-content-center align-items-center min-vh-100">
-        <Card className="p-4 shadow centered-card">
-          <h2 className="text-center text-primary">Voter Login</h2>
-          <Form onSubmit={handleLogin}>
-            <Form.Group className="mb-3">
-              <Form.Label>School ID</Form.Label>
-              <Form.Control
-                value={schoolId}
-                onChange={e => setSchoolId(e.target.value)}
-                required
-              />
-            </Form.Group>
-            <Button type="submit" variant="primary" className="w-100">
-              Login
-            </Button>
-            {loginError && <Alert variant="danger" className="mt-3">Invalid School ID</Alert>}
-          </Form>
+      <Container className="d-flex justify-content-center align-items-center" style={{ minHeight: '80vh' }}>
+        <Card className="p-4 shadow-lg" style={{ width: '400px' }}>
+          <Card.Body>
+            <h2 className="text-center mb-4">Voter Login</h2>
+            <Form onSubmit={handleLogin}>
+              <Form.Group className="mb-3">
+                <Form.Label>School ID</Form.Label>
+                <Form.Control
+                  value={schoolId}
+                  onChange={e => setSchoolId(e.target.value)}
+                  placeholder="Enter your School ID"
+                  required
+                  size="lg"
+                />
+              </Form.Group>
+              <Button type="submit" variant="primary" className="w-100" size="lg">
+                Login
+              </Button>
+              {loginError && <Alert variant="danger" className="mt-3">Invalid School ID. Please try again.</Alert>}
+            </Form>
+          </Card.Body>
         </Card>
       </Container>
     );
@@ -202,10 +206,16 @@ export default function Votes() {
   if (currentPositionIndex >= positions.length) {
     return (
       <Container className="my-5 text-center">
-        <h2 className="text-success">Voting Complete!</h2>
-        <p>Thank you for participating.</p>
-        <Button variant="secondary" onClick={logout} className="me-2">Vote Again</Button>
-        <Button variant="danger" onClick={resetVotes}>Reset My Votes</Button>
+        <Card className="p-5 shadow-lg">
+            <Card.Body>
+                <h2 className="text-success mb-3">Voting Complete!</h2>
+                <p className="lead">Thank you for participating in the election.</p>
+                <div className="mt-4">
+                    <Button variant="secondary" onClick={logout} className="me-2">Vote Again</Button>
+                    <Button variant="danger" onClick={resetVotes}>Reset My Votes</Button>
+                </div>
+            </Card.Body>
+        </Card>
       </Container>
     );
   }
@@ -213,97 +223,63 @@ export default function Votes() {
   const currentPosition = positions[currentPositionIndex];
   const currentCandidates = candidates.filter(c => c.position === currentPosition.name);
 
-  // Determine if the current position is 'President' to apply the specific UI
-  const isPresidentPosition = currentPosition.name.toLowerCase() === 'president';
-
   return (
     <Container className="my-5">
-      <h2 className="text-primary mb-4">Vote for {currentPosition.name}</h2>
-
-      {isPresidentPosition ? (
-        // UI for President position, matching the image style
-        <Card className="p-4 shadow" style={{ maxWidth: '500px', margin: 'auto' }}>
-          {currentCandidates.length === 0 ? (
-            <p className="text-center text-muted">No candidates for {currentPosition.name} yet.</p>
-          ) : (
-            currentCandidates.map(candidate => (
-              <InputGroup key={candidate.id} className="mb-3">
-                <InputGroup.Text className="w-100 d-flex justify-content-between align-items-center">
-                  <Form.Check
+      <h2 className="text-center mb-4">Vote for: <strong>{currentPosition.name}</strong></h2>
+      
+      <Row className="justify-content-center">
+        {currentCandidates.map(candidate => (
+          <Col key={candidate.id} md={6} lg={4} className="mb-4">
+            <Card
+              className={`h-100 text-center ${selectedCandidateId === candidate.id ? 'border-primary' : ''}`}
+              onClick={() => setSelectedCandidateId(candidate.id)}
+              style={{ cursor: 'pointer' }}
+            >
+              {candidate.photo && (
+                <Card.Img
+                  variant="top"
+                  src={candidate.photo}
+                  alt={`${candidate.firstName} ${candidate.lastName}`}
+                  style={{ width: '150px', height: '150px', objectFit: 'cover', borderRadius: '50%', margin: '20px auto 0' }}
+                />
+              )}
+              <Card.Body>
+                <Card.Title>{`${candidate.firstName} ${candidate.lastName}`}</Card.Title>
+                <Form.Check
                     type="radio"
                     id={`candidate-${candidate.id}`}
-                    name="presidentCandidate" // All radio buttons for this position share the same name
-                    label={`${candidate.firstName} ${candidate.lastName}`}
+                    name="candidateSelection"
                     checked={selectedCandidateId === candidate.id}
                     onChange={() => setSelectedCandidateId(candidate.id)}
-                    className="flex-grow-1" // Make label take up available space
+                    label="Select"
                   />
-                  {/* The red X is removed as per your request */}
-                </InputGroup.Text>
-              </InputGroup>
-            ))
-          )}
-          <Button
-            variant="primary"
-            onClick={handleVoteSubmit}
-            className="w-100 mt-3"
-            disabled={!selectedCandidateId} // Disable if no candidate is selected
-          >
-            Vote for {currentPosition.name}
-          </Button>
-        </Card>
-      ) : (
-        // Original UI for other positions (Card-based display)
-        <Row>
-          {currentCandidates.map(candidate => (
-            <Col key={candidate.id} md={4} className="mb-4">
-              <Card className="h-100">
-                {candidate.photo && (
-                  <Card.Img variant="top" src={candidate.photo} alt={`${candidate.firstName} ${candidate.lastName}`} />
-                )}
-                <Card.Body>
-                  <Card.Title>{`${candidate.firstName} ${candidate.lastName}`}</Card.Title>
-                  <Card.Text>{candidate.position}</Card.Text>
-                  <Button
-                    variant="primary"
-                    onClick={() => {
-                      setSelectedCandidateId(candidate.id); // Set selected candidate for this card
-                      handleVoteSubmit(); // Submit vote immediately
-                    }}
-                    disabled={selectedCandidateId === candidate.id} // Disable if already selected (though voteSubmit will move to next)
-                  >
-                    {selectedCandidateId === candidate.id ? 'Selected' : 'Vote'}
-                  </Button>
-                </Card.Body>
-              </Card>
-            </Col>
-          ))}
-          {/* A general "Next" or "Submit" button if not immediately submitting from card */}
-          {currentCandidates.length > 0 && (
-             <Col xs={12} className="text-center mt-3">
-               <Button
-                 variant="primary"
-                 onClick={handleVoteSubmit}
-                 disabled={!selectedCandidateId} // Ensure a selection is made
-               >
-                 Submit Vote for {currentPosition.name}
-               </Button>
-             </Col>
-           )}
-        </Row>
-      )}
+              </Card.Body>
+            </Card>
+          </Col>
+        ))}
+      </Row>
 
-      <div className="mt-4 text-center">
+      <div className="text-center mt-4">
+        <Button
+          variant="primary"
+          size="lg"
+          onClick={handleVoteSubmit}
+          disabled={!selectedCandidateId}
+        >
+          Submit Vote for {currentPosition.name}
+        </Button>
+      </div>
+
+      <div className="mt-5 d-flex justify-content-between">
         {currentPositionIndex > 0 && (
           <Button
             variant="outline-secondary"
             onClick={() => setCurrentPositionIndex(prev => prev - 1)}
-            className="me-2"
           >
-            Previous Position
+            &larr; Previous Position
           </Button>
         )}
-        <Button variant="secondary" onClick={logout}>Logout</Button>
+        <Button variant="danger" onClick={logout}>Logout</Button>
       </div>
     </Container>
   );

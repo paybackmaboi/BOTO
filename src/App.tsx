@@ -1,74 +1,52 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import HomePage from './HomePage';
-import VotesPage from './VotePage';
+import CandidatesPage from './CandidatePage';
 import VotersPage from './VotersPage';
 import PositionsPage from './PositionsPage';
-import CandidatesPage from './CandidatePage';
-import ResultsPage from './ResultPage';
-import './App.css';
-
-type Page = 'Home' | 'Votes' | 'Voters' | 'Positions' | 'Candidates' | 'Results';
-
-const menu: { label: Page }[] = [
-  { label: 'Home' },
-  { label: 'Votes' },
-  { label: 'Voters' },
-  { label: 'Positions' },
-  { label: 'Candidates' },
-  { label: 'Results' },
-];
+import VotePage from './VotePage';
+import ResultPage from './ResultPage';
+import Sidebar from './Sidebar';
+import Header from './Header';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './index.css';
 
 const App: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState<Page>('Home');
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
 
-  const renderPage = () => {
-    switch (currentPage) {
-      case 'Home': return <HomePage />;
-      case 'Votes': return <VotesPage />;
-      case 'Voters': return <VotersPage />;
-      case 'Positions': return <PositionsPage />;
-      case 'Candidates': return <CandidatesPage />;
-      case 'Results': return <ResultsPage />;
-      default: return <HomePage />;
+  const toggleSidebar = () => {
+    setSidebarOpen(!isSidebarOpen);
+  };
+
+  const closeSidebar = () => {
+    if (isSidebarOpen) {
+      setSidebarOpen(false);
     }
   };
 
   return (
-    <>
-      {/* Hamburger for mobile */}
-      <button
-        id="hamburger"
-        aria-label="Open sidebar"
-        onClick={() => setSidebarOpen(s => !s)}
-        style={{ left: sidebarOpen ? 'calc(var(--sidebar-width) + 16px)' : 16 }}
-      >
-        {/* Simple hamburger icon */}
-        <span style={{ fontSize: 28, fontWeight: 'bold' }}>&#9776;</span>
-      </button>
+    <Router>
+      <div className="App">
+        <div
+          className={`overlay ${isSidebarOpen ? 'show' : ''}`}
+          onClick={closeSidebar}
+        ></div>
 
-      {/* Sidebar */}
-      <nav id="sidebar" className={sidebarOpen ? 'show' : ''}>
-        
-        <div>
-          {menu.map(item => (
-            <a
-              key={item.label}
-              className={`nav-link${currentPage === item.label ? ' active' : ''}`}
-              href="#"
-              onClick={e => { e.preventDefault(); setCurrentPage(item.label); setSidebarOpen(false); }}
-            >
-              {item.label}
-            </a>
-          ))}
-        </div>
-      </nav>
+        <Header toggleSidebar={toggleSidebar} />
+        <Sidebar isOpen={isSidebarOpen} closeSidebar={closeSidebar} />
 
-      {/* Main Content */}
-      <main id="content" onClick={() => sidebarOpen && setSidebarOpen(false)}>
-        {renderPage()}
-      </main>
-    </>
+        <main className={isSidebarOpen ? 'content-shifted' : ''}>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/positions" element={<PositionsPage />} />
+            <Route path="/candidates" element={<CandidatesPage />} />
+            <Route path="/voters" element={<VotersPage />} />
+            <Route path="/vote" element={<VotePage />} />
+            <Route path="/results" element={<ResultPage />} />
+          </Routes>
+        </main>
+      </div>
+    </Router>
   );
 };
 

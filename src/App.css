@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap');
+
 :root {
   --blue-primary: #1877f2;
   --blue-light: #e7f3ff;
@@ -10,7 +12,7 @@
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Inter', sans-serif;
   background-color: var(--gray-light);
   color: #222;
   margin: 0;
@@ -19,25 +21,24 @@ body {
 
 /* Sidebar */
 #sidebar {
+  width: 220px;
   position: fixed;
   top: 0;
   left: 0;
-  height: 100vh;
-  width: var(--sidebar-width);
+  bottom: 0;
   background: var(--blue-primary);
   color: var(--white);
   display: flex;
   flex-direction: column;
   padding: 1.5rem 1rem;
-  transition: transform var(--transition-time) ease;
-  z-index: 1050;
-  transform: translateX(calc(-1 * var(--sidebar-width))); /* Hidden by default */
+  overflow-y: auto;
+  transition: transform 0.3s ease;
+  z-index: 1000;
+  transform: translateX(-100%);
 }
-
 #sidebar.show {
   transform: translateX(0);
 }
-
 #sidebar .nav-link {
   color: var(--white);
   font-weight: 600;
@@ -50,13 +51,10 @@ body {
   transition: background-color 0.2s;
   text-decoration: none;
 }
-
 #sidebar .nav-link:hover,
 #sidebar .nav-link.active {
   background-color: var(--blue-dark);
-  text-decoration: none;
 }
-
 #sidebar .material-icons {
   font-size: 24px;
   user-select: none;
@@ -64,20 +62,20 @@ body {
 
 /* Main content */
 #content {
-  margin-left: 0; /* Default: no margin for small screens */
+  margin-left: 220px;
   padding: 2rem 2rem 4rem;
   transition: margin-left var(--transition-time) ease;
-  width: 100%; /* Occupy full width initially */
+  width: 100%;
 }
-
-/* When sidebar is open, push content */
-@media (min-width: 768px) { /* Adjust breakpoint as needed */
-  #content {
-    margin-left: 0; /* Ensures it starts at 0 for larger screens */
+@media (max-width: 768px) {
+  #sidebar {
+    transform: translateX(-100%);
   }
-
-  #sidebar.show ~ #content {
-    margin-left: var(--sidebar-width);
+  #sidebar.show {
+    transform: translateX(0);
+  }
+  #content {
+    margin-left: 0;
   }
 }
 
@@ -100,7 +98,6 @@ body {
   box-shadow: 0 4px 8px rgba(24, 119, 242, 0.4);
   transition: background-color 0.3s;
 }
-
 #hamburger:hover {
   background: var(--blue-dark);
 }
@@ -113,51 +110,93 @@ body {
   padding: 1.5rem;
   margin-bottom: 1.5rem;
 }
-
 .announcement-card h3 {
   color: var(--blue-dark);
   margin-bottom: 0.5rem;
 }
 
-#sidebar {
-  width: 220px;
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  overflow-y: auto;
-  transition: transform 0.3s ease;
-  z-index: 1000;
-  transform: translateX(-100%);
-}
-#sidebar.show {
-  transform: translateX(0);
-}
-#content {
-  margin-left: 220px;
-}
-@media (max-width: 768px) {
-  #sidebar {
-    transform: translateX(-100%);
-  }
-  #sidebar.show {
-    transform: translateX(0);
-  }
-  #content {
-    margin-left: 0;
-  }
-}
+/* Buttons */
 .btn-custom-blue {
   background-color: #4a90e2;
   color: white;
   border: none;
 }
-
 .btn-custom-blue:hover {
   background-color: #357ab8;
 }
 
+/* Table */
 .table-header-custom {
   background-color: #e7f1fd;
   font-weight: bold;
+}
+
+/* Hero Section */
+.hero-section {
+  background: linear-gradient(135deg, #0d6efd, #17a2b8);
+  color: white;
+  padding: 5rem 1.5rem;
+  border-radius: 1rem;
+  margin-top: 2rem;
+  margin-bottom: 3rem;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+.hero-section h1 {
+  font-weight: 800;
+}
+.hero-section .lead {
+  font-size: 1.25rem;
+  opacity: 0.9;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Section Title */
+.section-title {
+  font-weight: 700;
+  color: #343a40;
+  margin-bottom: 2.5rem;
+}
+
+/* Countdown Card */
+.countdown-card {
+  background-color: #ffffff;
+  border-radius: 0.75rem;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  text-align: center;
+}
+.countdown-card .display-4 {
+  font-weight: 700;
+  color: #0d6efd;
+}
+
+/* Feature Card */
+.feature-card {
+  border: none;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 1rem;
+  height: 100%;
+}
+.feature-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+.feature-card .card-title {
+  font-weight: 700;
+  color: #0d6efd;
+  display: flex;
+  align-items: center;
+}
+.feature-card .card-title i {
+  font-size: 1.75rem;
+  margin-right: 1rem;
+  width: 30px;
+}
+.feature-card .list-group-item {
+  border: none;
+  padding-left: 0;
 }
