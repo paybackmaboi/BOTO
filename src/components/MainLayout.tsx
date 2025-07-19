@@ -1,28 +1,20 @@
-import React, { useState } from 'react';
-import Header from './Header';
+import { useState } from 'react';
 import Sidebar from './Sidebar';
-import './MainLayout.css';
+import { Button } from 'react-bootstrap';
 
-const MainLayout = ({ children, links, handleLogout, title }) => {
-    const [isSidebarOpen, setSidebarOpen] = useState(true);
-
-    const toggleSidebar = () => {
-        setSidebarOpen(!isSidebarOpen);
-    };
+const MainLayout = ({ links, children, handleLogout, title }) => {
+    const [isOpen, setIsOpen] = useState(true);
+    const toggle = () => setIsOpen(!isOpen);
 
     return (
-        <div className="main-layout">
-            <Sidebar isOpen={isSidebarOpen} links={links} />
-            <div className={`content ${isSidebarOpen ? 'shifted' : ''}`}>
-                <Header 
-                    toggleSidebar={toggleSidebar} 
-                    handleLogout={handleLogout} 
-                    showLogout={true}
-                    title={title}
-                />
-                <main className="main-content">
-                    {children}
-                </main>
+        <div className="d-flex">
+            <Sidebar isOpen={isOpen} toggle={toggle} links={links} handleLogout={handleLogout} />
+            <div className={`p-4 w-100`}>
+                <div className="d-flex justify-content-between align-items-center mb-4">
+                    <Button variant="primary" onClick={toggle}>Menu</Button>
+                    <h2>{title}</h2>
+                </div>
+                {children}
             </div>
         </div>
     );

@@ -1,29 +1,24 @@
-import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import MainLayout from '../components/MainLayout';
-import Dashboard from './pages/Dashboard';
-import Election from './pages/Election';
-import Candidates from './pages/Candidates';
-import Voters from './pages/Voters';
+import CandidatesPage from './pages/CandidatesPage';
+import PositionsPage from './pages/PositionsPage';
+import VotersPage from './pages/VotersPage';
+import MainLayout from '../components/MainLayout'; // Assuming you have a layout with a sidebar
 
 const AdminDashboard = ({ setAdminLoggedIn }) => {
-    const adminLinks = [
-        { path: '/admin/dashboard', name: 'Dashboard' },
-        { path: '/admin/election', name: 'Election' },
-        { path: '/admin/candidates', name: 'Candidates' },
-        { path: '/admin/voters', name: 'Voters' },
-    ];
-
-    return (
-        <MainLayout links={adminLinks} handleLogout={() => setAdminLoggedIn(false)} title="Admin Dashboard">
-            <Routes>
-                <Route path="dashboard" element={<Dashboard />} />
-                <Route path="election" element={<Election />} />
-                <Route path="candidates" element={<Candidates />} />
-                <Route path="voters" element={<Voters />} />
-            </Routes>
-        </MainLayout>
-    );
+  return (
+    // You would wrap your pages in a layout component
+    <MainLayout logoutHandler={() => setAdminLoggedIn(false)}>
+      <Routes>
+        {/* The default page for /admin/ */}
+        <Route index element={<h2>Welcome Admin!</h2>} /> 
+        
+        {/* Note: no leading slash in nested routes */}
+        <Route path="candidates" element={<CandidatesPage />} />
+        <Route path="positions" element={<PositionsPage />} />
+        <Route path="voters" element={<VotersPage />} />
+      </Routes>
+    </MainLayout>
+  );
 };
 
 export default AdminDashboard;

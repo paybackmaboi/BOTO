@@ -1,10 +1,12 @@
+// src/App.tsx
+
 import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-
-// Core Pages & Components
 import HomePage from './pages/HomePage';
+// Core Pages & Components
+import Login from './components/Login';
 import AdminDashboard from './Admin/AdminDashboard';
-import UserDashboard from './User/UserDashboard'; // <-- VERIFY THIS LINE
+import UserDashboard from './User/UserDashboard'; 
 
 // Styles
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -38,7 +40,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<HomePage setAdminLoggedIn={handleAdminLogin} setUserLoggedIn={handleUserLogin} />} />
+        <Route path="/" element={<Login setAdminLoggedIn={handleAdminLogin} setUserLoggedIn={handleUserLogin} />} />
 
         {/* Admin Routes */}
         <Route
